@@ -69,6 +69,13 @@ async def dm(ctx, *, msg):
 async def reply(ctx):
     await ctx.reply("This is a reply to your message!")
 
+@bot.command()
+async def poll(ctx, *, question):
+    embed = discord.Embed(title="New Poll", description=question)
+    poll_message = await ctx.send(embed=embed)
+    await poll_message.add_reaction("✝️")
+    await poll_message.add_reaction("😈")
+
 
 @bot.command()
 @commands.has_role(secret_role)
