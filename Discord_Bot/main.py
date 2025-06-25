@@ -61,11 +61,22 @@ async def remove(ctx):
     else:
         await ctx.send("Role doesn't exist")
 
+@bot.command()
+async def dm(ctx, *, msg):
+    await ctx.author.send(f"You said {msg}")
+
+@bot.command()
+async def reply(ctx):
+    await ctx.reply("This is a reply to your message!")
+
 
 @bot.command()
 @commands.has_role(secret_role)
 async def secret(ctx):
     await ctx.send("Welcome to the club!")
+
+
+
 
 
 @secret.error
