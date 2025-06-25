@@ -14,6 +14,8 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+secret_role = "Cygan"
+
 @bot.event
 async def on_ready():
     print(f"We are ready to go in, {bot.user.name}")  
@@ -31,11 +33,44 @@ async def on_message(message):
         await message.delete()
         await message.channel.send(f"{message.author.mention} - don't use that word nigger!")
 
-        await bot.process_commands(message)
+    await bot.process_commands(message)
+
 
 # !hello
 @bot.command()
 async def hello(ctx):
     await ctx.send(f"Hello {ctx.author.mention}!")
+
+
+@bot.command()
+async def assign(ctx):
+    role = discord.utils.get(ctx.guild.roles, name=secret_role)
+    if role:
+        await ctx.author.add_roles(role)
+        await ctx.send(f"{ctx.author.mention} is now assigned to {secret_role}")
+    else:
+        await ctx.send("Role doesn't exist")
+
+
+@bot.command()
+async def remove(ctx):
+    role = discord.utils.get(ctx.guild.roles, name=secret_role)
+    if role:
+        await ctx.author.remove_roles(role)
+        await ctx.send(f"{ctx.author.mention} has had the {secret_role} removed")
+    else:
+        await ctx.send("Role doesn't exist")
+
+
+@bot.command()
+@commands.has_role(secret_role)
+async def secret(ctx):
+    await ctx.send("Welcome to the club!")
+
+
+@secret.error
+async def secret_error(ctx, error):
+    if instance(error, commands.MissingRole):
+        await ctx.send("You do not have a permission to do that!")
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
